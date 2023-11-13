@@ -20,6 +20,7 @@ const NavBar = () => {
                 <button onClick={handleLogOut} className="btn text-white btn-sm glass">LogOut</button>
             </> : <>
             <li><NavLink to='/login'>Login</NavLink></li>
+            <li><NavLink to='/signup'>Sign Up</NavLink></li>
             </>
         }
     </>
@@ -44,7 +45,7 @@ const NavBar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <a className="btn">Button</a>
+                    {user ? <><p className="bg-slate-600 p-2 rounded-lg">{user.displayName}</p></>:<><p></p></>}
                 </div>
             </div>
         </>

@@ -2,17 +2,20 @@ import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../providers/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
     const {
         register,
         handleSubmit,
-
+        reset,
         formState: { errors },
     } = useForm()
 
-    const  {createUser} = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    const  {createUser, updateUserProfile} = useContext(AuthContext)
 
     const onSubmit = (data) => {
         console.log(data)
@@ -20,6 +23,17 @@ const SignUp = () => {
         .then(result=>{
             const loggedUser = result.user
             console.log(loggedUser);
+            updateUserProfile(data.name, data.photoUrl)
+            .then(()=>{
+                console.log('profile info updated');
+                reset()
+                toast.success('profile has Created')
+                navigate('/')
+            })
+            .catch(error=>{
+                console.log(error);
+                toast.error(error.message)
+            })
         })
     }
 
@@ -40,6 +54,7 @@ const SignUp = () => {
                     </div>
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                         <form onSubmit={handleSubmit(onSubmit)} className="card-body">
+
                             <div className="form-control">
                                 <label className="label justify-start ">
                                     <span className="label-text border">Name</span>
@@ -47,6 +62,17 @@ const SignUp = () => {
                                 </label>
 
                                 <input name="name" {...register("name", { required: true })} type="text" placeholder="Name" className="input input-bordered" />
+
+
+                            </div>
+
+                            <div className="form-control">
+                                <label className="label justify-start ">
+                                    <span className="label-text border">Photo Url</span>
+                                    {errors.photoUrl && <span className="text-red-400 ">*</span>}
+                                </label>
+
+                                <input {...register("photoUrl", { required: true })} type="text" placeholder="PhotoUrl" className="input input-bordered" />
 
 
                             </div>
