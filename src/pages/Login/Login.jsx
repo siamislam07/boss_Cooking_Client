@@ -1,9 +1,10 @@
-import { useContext, useEffect,  useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha, } from 'react-simple-captcha';
 import { AuthContext } from '../../providers/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
+import SocialLogin from '../../components/SocialLogin/SocialLogin';
 
 
 const Login = () => {
@@ -33,7 +34,7 @@ const Login = () => {
                 const user = result.user
                 console.log(user);
                 toast.success('Login Successful')
-                navigate(from,{replace: true})
+                navigate(from, { replace: true })
             })
     }
 
@@ -51,7 +52,7 @@ const Login = () => {
 
     return (
         <>
-        <Helmet>
+            <Helmet>
                 <title>Boss | Login</title>
             </Helmet>
             <div className="hero min-h-screen bg-base-200">
@@ -88,7 +89,8 @@ const Login = () => {
                                 <button disabled={disabled} className="btn btn-primary" type="submit">Login</button>
                             </div>
                         </form>
-                        <p><small>New Here? <Link to="/signup">Create an Account</Link></small></p>
+                        <p className="p-3 ml-5"><small>New Here? <Link to="/signup">Create an Account</Link></small></p>
+                        <SocialLogin />
                     </div>
                 </div>
             </div>

@@ -4,8 +4,11 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import SocialLogin from "../../components/SocialLogin/SocialLogin";
 
 const SignUp = () => {
+    const axiosPublic = useAxiosPublic()
     const {
         register,
         handleSubmit,
@@ -25,10 +28,20 @@ const SignUp = () => {
             console.log(loggedUser);
             updateUserProfile(data.name, data.photoUrl)
             .then(()=>{
-                console.log('profile info updated');
-                reset()
+                // create user entry in 
+                const userInfo ={
+                    name: data.name,
+                    email: data.email
+                }
+                axiosPublic.post('/users',userInfo)
+                .then(res=>{
+                    if (res.data.insertedId) {
+                        reset()
                 toast.success('profile has Created')
                 navigate('/')
+                    }
+                })
+                
             })
             .catch(error=>{
                 console.log(error);
@@ -105,6 +118,7 @@ const SignUp = () => {
                             </div>
                         </form>
                         <p className="p-3 ml-5"><small>Already have an account?<Link to="/login">Login</Link></small></p>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>
