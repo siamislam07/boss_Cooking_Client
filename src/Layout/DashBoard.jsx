@@ -11,7 +11,7 @@ const DashBoard = () => {
     return (
         <div className="flex">
             {/* dashboard side bar */}
-            <div className="w-64 min-h-screen bg-orange-500">
+            <div className="w-64 min-h-screen bg-orange-500 ">
                 <ul className="menu p-3 mt-24 space-y-3">
                     {
                         isAdmin ? <>
