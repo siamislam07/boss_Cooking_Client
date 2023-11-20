@@ -3,9 +3,10 @@ import useMenu from "../../../Hooks/useMenu";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const ManageItems = () => {
-    const [menu,  , refetch] = useMenu()
+    const [menu, , refetch] = useMenu()
     const axiosSecure = useAxiosSecure()
 
     const handleDeleteItem = (item) => {
@@ -17,21 +18,21 @@ const ManageItems = () => {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
 
                 const res = await axiosSecure.delete(`/menu/${item._id}`)
 
-                        console.log(res.data);
-                        if (res.data.deletedCount > 0) {
-                            refetch()
-                            Swal.fire(
-                                'Deleted!',
-                                `${item.name} has been deleted`,
-                                'success'
-                            )
-                        }
-                    
+                console.log(res.data);
+                if (res.data.deletedCount > 0) {
+                    refetch()
+                    Swal.fire(
+                        'Deleted!',
+                        `${item.name} has been deleted`,
+                        'success'
+                    )
+                }
+
             }
         })
     }
@@ -76,10 +77,12 @@ const ManageItems = () => {
                                     <td>${item.price}</td>
                                     <td>
 
-                                        <button
+                                        <Link to={`/dashboard/updateItem/${item._id}`}>
+                                            <button
 
-                                            className="btn  btn-lg bg-orange-500 hover:bg-orange-700"><FaEdit className="text-white text-xl" />
-                                        </button>
+                                                className="btn  btn-lg bg-orange-500 hover:bg-orange-700"><FaEdit className="text-white text-xl" />
+                                            </button>
+                                        </Link>
 
                                     </td>
                                     <td>

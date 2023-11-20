@@ -1,6 +1,6 @@
 import {
     createBrowserRouter,
-    
+
 } from "react-router-dom";
 import Main from "../Layout/Main";
 import Home from "../pages/Home/Home/Home";
@@ -16,6 +16,7 @@ import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import AddItems from "../pages/Dashboard/AddItems/AddItems";
 import AdminRoute from "./AdminRoute";
 import ManageItems from "../pages/Dashboard/ManageItems/ManageItems";
+import UpdateItem from "../pages/Dashboard/UpdateItem/UpdateItem";
 
 
 
@@ -26,53 +27,58 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element:<Home ></Home>
+                element: <Home ></Home>
             },
             {
-                path:'menu',
-                element:<Menu></Menu>
+                path: 'menu',
+                element: <Menu></Menu>
             },
             {
-                path:'order/:category',
+                path: 'order/:category',
                 element: <Order></Order>
             },
             {
-                path:'login',
+                path: 'login',
                 element: <Login></Login>
             },
             {
-                path:'signup',
-                element:<SignUp></SignUp>
+                path: 'signup',
+                element: <SignUp></SignUp>
             },
             {
-                path:'secret',
+                path: 'secret',
                 element: <PrivateRoute><Secret /></PrivateRoute>
             }
         ]
     },
     {
-        path:'dashboard',
-        element:<PrivateRoute><DashBoard></DashBoard></PrivateRoute>,
-        children:[
+        path: 'dashboard',
+        element: <PrivateRoute><DashBoard></DashBoard></PrivateRoute>,
+        children: [
             // normal user routes
             {
-                path:'cart',
-                element:<Cart></Cart>
+                path: 'cart',
+                element: <Cart></Cart>
             },
 
             // admin routes
             {
-                path:'addItems',
-                element:<AdminRoute><AddItems></AddItems></AdminRoute>
+                path: 'addItems',
+                element: <AdminRoute><AddItems></AddItems></AdminRoute>
             },
             {
-                path:"manageItems",
-                element:<AdminRoute><ManageItems></ManageItems></AdminRoute>
+                path: "manageItems",
+                element: <AdminRoute><ManageItems></ManageItems></AdminRoute>
+            },
+            {
+                path: 'updateItem/:id',
+                element: <AdminRoute><UpdateItem></UpdateItem></AdminRoute>,
+                loader: ({params}) => fetch(`http://localhost:5000/menu/${params.id}`)
             },
 
             {
-                path:'users',
-                element:<AdminRoute><AllUsers /></AdminRoute>
+                path: 'users',
+                element: <AdminRoute><AllUsers /></AdminRoute>
             }
 
         ]
