@@ -1,8 +1,10 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { CardElement, CardNumberElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useCart from "../../../Hooks/useCart";
 import useAuth from "../../../Hooks/useAuth";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 const CheckOutForm = () => {
@@ -16,6 +18,7 @@ const CheckOutForm = () => {
     const elements = useElements()
     const axiosSecure = useAxiosSecure()
     const [cart] = useCart()
+    const navigate = useNavigate()
     const totalPrice = cart.reduce((total, item) => total + item.price, 0)
 
     useEffect(() => {
@@ -82,7 +85,11 @@ const CheckOutForm = () => {
                     status: 'Pending'
                 }
                 const res = await axiosSecure.post('/payments', payment)
-                    console.log('payments saved', res.data);
+                console.log('payments saved', res.data);
+                if (res?.data?.paymentResult?.insertedId) {
+                    toast.success('Thank you for the taka poysha')
+                    navigate('/dashboard/paymentHistory')
+                }
             }
         }
 
@@ -92,34 +99,40 @@ const CheckOutForm = () => {
 
     return (
 
-        <form onSubmit={handleSubmit}>
+        <form className="mx-auto max-w-md p-8 bg-white shadow-lg rounded-lg " onSubmit={handleSubmit}>
 
-
-
-
-            <CardElement
-                options={{
-                    style: {
-                        base: {
-                            fontSize: '16px',
-                            color: '#424770',
-                            '::placeholder': {
-                                color: '#aab7c4',
+            <div className="mb-4">
+                <label htmlFor="cardNumber" className="block text-gray-700 text-lg font-bold mb-2">Card Number</label>
+                <CardElement
+                className="my-10"
+                    id="cardNumber"
+                    options={{
+                        style: {
+                            base: {
+                                fontSize: '16px',
+                                color: '#424770',
+                                '::placeholder': {
+                                    color: '#aab7c4',
+                                },
+                            },
+                            invalid: {
+                                color: '#9e2146',
                             },
                         },
-                        invalid: {
-                            color: '#9e2146',
-                        },
-                    },
-                }}
-            />
-            <button className="btn btn-sm btn-primary my-5" type="submit" disabled={!stripe || !clientSecret}>
-                pay Now
+                    }}
+                />
+            </div>
+
+            <button
+                className="w-full bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+                disabled={!stripe || !clientSecret}
+            >
+                Pay Now
             </button>
 
-
-            <p className="text-red-700">{error}</p>
-            {transactionId && <p className="text-green-700 font-bold">Your  TransactionId id: {transactionId}</p>}
+            <p className="text-red-700 mt-4">{error}</p>
+            {transactionId && <p className="text-green-700 font-bold mt-2">Your TransactionId is: {transactionId}</p>}
 
         </form>
     );
